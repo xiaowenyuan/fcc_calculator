@@ -1,38 +1,92 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Cousine&display=swap');
+
+.App{
+  width:100vw;
+  height:100vh;
+  margin:0;
+  top:0;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  background-color:#96B6C5;
+  font-family: 'Cousine', monospace;
+}
+.Calculator{
+  border:3px solid #3D246C;
+  display:flex-column;
+  width:30%;
+  height:60%;
+  background-color:#EEE0C9;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.CalcDisplay, .HistoryDisplay{
+  text-align:right;
+  padding:1%;
+  display:flex;
+  background-color: #3D246C;
+
+  justify-content:flex-end;
+  align-items: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.CalcDisplay{
+  height:13%;
+  font-size:2em;
+  color:#EEE0C9;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+.HistoryDisplay{
+  height:4%;
+  font-size:0.75em;
+  color: #9F91CC;
+}
+
+.Numpad{
+  display:grid;
+  height:80%;
+  padding:0;
+  margin:0;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.Numpad-element{
+  padding:0;
+  margin:0;
+  width:1fr;
+  height:1fr;
+  display:flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  text-align:center;
+  border:1px solid #5C4B99;
+  cursor:pointer;
 }
 
-.App-link {
-  color: #61dafb;
+
+
+#clear{
+  grid-column-start: 1;
+  grid-column-end: 3;
+  background-color:#5C4B99;
+  color:#EEE0C9;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#equals{
+  height:2fr;
+  grid-column-start: 4;
+  grid-column-end: 5;
+  grid-row-start:-3;
+  grid-row-end: -1;
+  background-color:#9F91CC;
+}
+
+#divide, #multiply, #subtract, #add{
+  background-color:#F1F0E8;
+}
+
+
+.Numpad-element:hover, #divide:hover, #multiply:hover, #subtract:hover, #add:hover, #equals:hover, #clear:hover{
+  background-color: #3D246C;
+  color:#EEE0C9;
 }
