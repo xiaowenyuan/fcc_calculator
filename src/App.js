@@ -72,7 +72,6 @@ const App = () => {
         return parseFloat(firstNumber) * parseFloat(secondNumber);
         break;
       case '*':
-        console.log('multiply')
         return parseFloat(firstNumber) * parseFloat(secondNumber);
         break;
       case '-':
@@ -175,12 +174,12 @@ const App = () => {
         }
       }
     }
-    else if (input === '='){
+    else if (input === '=' || input === 'Enter'){
       if (firstNumber!='' && secondNumber!='' && operation){
         setResult(do_operation(operation, firstNumber, secondNumber));
       }
     }
-    else if (input === 'AC'){
+    else if (input === 'AC' || input === 'Backspace'){
       AC();
     }
   }
@@ -193,7 +192,6 @@ const App = () => {
 
   React.useEffect(() => {
     if(firstNumber != ''){
-      console.log(`firstNumber is ${firstNumber}`);
       setDisplay(firstNumber);
       setHistoryDisplay(firstNumber);
     }
@@ -201,7 +199,6 @@ const App = () => {
 
   React.useEffect(() => {
     if (secondNumber != ''){
-      console.log(`secondNumber is ${secondNumber}`);
       setDisplay(secondNumber);
       setHistoryDisplay(firstNumber + operation + secondNumber);
     }
@@ -209,14 +206,12 @@ const App = () => {
 
   React.useEffect(() => {
     if (operation!= ''){
-      console.log(`operation is ${operation}`);
       setHistoryDisplay(firstNumber + operation)
     }
   }, [operation]);
 
   React.useEffect(() => {
     if(firstNumber!='' && secondNumber!='' && operation && result){
-      console.log(`the result of ${firstNumber} ${operation} ${secondNumber} is ${result}`);
       setDisplay(result);
       setHistoryDisplay(historyDisplay.concat(`= ${result}`))
       setOperation('');
