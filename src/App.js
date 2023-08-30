@@ -17,13 +17,14 @@ const HistoryDisplay = (props) => {
   )
 }
 
+
 const Numpad = (props) => {
   const numpad_array = [['AC', 'clear'], ['/', 'divide'] , ['x', 'multiply'], ['7', 'seven'], ['8', 'eight'], ['9', 'nine'], ['-', 'subtract'], ['4', 'four'], ['5', 'five'], ['6', 'six'], ['+', 'add'], ['1', 'one'], ['2', 'two'], ['3', 'three'], ['=', 'equals'], ['0', 'zero'], ['.', 'decimal'], ['+/-', 'positive-negative']]
   return(
     <div className="Numpad">
       {numpad_array.map((element) => {
         return(
-          <div className="Numpad-element" id={`${element[1]}`} key={`numpad-${element[1]}`} onClick={props.numHandler}>
+          <div className="Numpad-element" id={`${element[1]}`} key={`numpad-${element[1]}`} onClick={props.numclick} >
             {element[0]}
           </div>
         )
@@ -36,11 +37,15 @@ const Calculator = (props) => {
     <div className="Calculator">
       <HistoryDisplay historyDisplay={props.historyDisplay} />
       <CalcDisplay display={props.display} key={props.display}/>
-      <Numpad numHandler={props.numHandler}/>
+      <Numpad numclick={props.numclick} numkeyboard={props.numkeyboard}/>
     </div>
   )
 }
 const App = () => {
+  const handleKeyPress = (e) => {
+    numHandler(e.key);
+  };
+
   const [firstNumber, setFirstNumber] = React.useState('');
   const [secondNumber, setSecondNumber] = React.useState('');
   const [operation, setOperation] = React.useState('');
@@ -56,7 +61,7 @@ const App = () => {
     setResult(0);
     setHistoryDisplay('');
   }
-  const operation_array = ['/', 'x', '-', '+'];
+  const operation_array = ['/', 'x', '-', '+', '*'];
 
   const do_operation = (operation, firstNumber, secondNumber) => {
     switch(operation){
@@ -64,6 +69,10 @@ const App = () => {
         return parseFloat(firstNumber) / parseFloat(secondNumber);
         break;
       case 'x':
+        return parseFloat(firstNumber) * parseFloat(secondNumber);
+        break;
+      case '*':
+        console.log('multiply')
         return parseFloat(firstNumber) * parseFloat(secondNumber);
         break;
       case '-':
@@ -74,37 +83,43 @@ const App = () => {
         break;
     }
   }
+  const numclick = (e) => {
+    numHandler(e.target.innerText);
+  }
 
-  const numHandler = (e) => {
-    if (!isNaN(parseInt(e.target.innerText))){
+  const numkeyboard = (e) => {
+    numHandler(e.key);
+  }
+  const numHandler = (input) => {
+    if (!isNaN(parseInt(input))){
       if(!operation && firstNumber===''){
-        if(e.target.innerText === '0'){return}
+        if(input === '0'){return}
         if(result){
           setResult(0);
           setHistoryDisplay('');
         }
-        setFirstNumber(e.target.innerText);
+        setFirstNumber(input);
       } else if (!operation && firstNumber!=''){
-        let newFirstNumber = firstNumber + e.target.innerText;
+        let newFirstNumber = firstNumber + input;
         setFirstNumber(newFirstNumber);
       }
       else if (operation && secondNumber===''){
-        if (e.target.innerText === '0'){return}
-        setSecondNumber(e.target.innerText);
+        if (input === '0'){return}
+        setSecondNumber(input);
       } else if (operation && secondNumber!=''){
-        setSecondNumber(secondNumber + e.target.innerText);
+        setSecondNumber(secondNumber + input);
       }
     }
-    else if (operation_array.includes(e.target.innerText)){
+    else if (operation_array.includes(input)){
       if (result){
         setHistoryDisplay(String(result));
         setFirstNumber(String(result));
         setResult(0);
       }
-        setOperation(e.target.innerText)
+        setOperation(input)
       ;
     }
-    else if (e.target.innerText === '.') {
+    else if (input === '.') {
       if(firstNumber==='' && !result && !firstNumber.includes('.')){
         setFirstNumber('0.');
       } else if (firstNumber!='' && !operation && secondNumber==='' && !firstNumber.includes('.')){
@@ -115,7 +130,7 @@ const App = () => {
         setSecondNumber(secondNumber + '.');
       }
     }
-    else if (e.target.innerText === '+/-'){
+    else if (input=== '+/-'){
       //check if there is no secondNumber
       if (secondNumber === '' && !operation){
         if (!result){
@@ -160,15 +175,22 @@ const App = () => {
         }
       }
     }
-    else if (e.target.innerText === '='){
+    else if (input === '='){
       if (firstNumber!='' && secondNumber!='' && operation){
         setResult(do_operation(operation, firstNumber, secondNumber));
       }
     }
-    else if (e.target.innerText === 'AC'){
+    else if (input === 'AC'){
       AC();
     }
   }
+
+  React.useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+  }}, [handleKeyPress])
+
   React.useEffect(() => {
     if(firstNumber != ''){
       console.log(`firstNumber is ${firstNumber}`);
@@ -205,7 +227,7 @@ const App = () => {
   }, [result])
   return (
     <div className="App">
-      <Calculator display={display} numHandler={numHandler} historyDisplay={historyDisplay}/>
+      <Calculator display={display} numclick={numclick} numkeyboard={numkeyboard} historyDisplay={historyDisplay}/>
     </div>
   );
 }
